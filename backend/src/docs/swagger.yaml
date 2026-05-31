@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: Expense Tracker API
+  description: API documentation for the Expense Tracker backend
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User created successfully
+  /auth/login:
+    post:
+      summary: Log in a user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+  /expenses:
+    get:
+      summary: Get all expenses
+      responses:
+        '200':
+          description: Successful retrieval
+    post:
+      summary: Add a new expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                category:
+                  type: string
+      responses:
+        '201':
+          description: Expense added
+  /analytics/categories:
+    get:
+      summary: Get category-wise breakdown (cached)
+      responses:
+        '200':
+          description: Aggregation data
+  /reports/export:
+    get:
+      summary: Export expenses as PDF or CSV
+      parameters:
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [pdf, csv]
+          description: format to export
+      responses:
+        '200':
+          description: File download
